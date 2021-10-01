@@ -184,32 +184,6 @@ image sub_image(image a, image b)
     return result;
 }
 
-// image make_gx_filter()
-// {
-//     static const float gx_kernel[9] = {
-//         -1  ,0  ,1  ,
-//         -2  ,0  ,2  ,
-//         -1  ,0  ,1  ,
-//     };
-//     image gx = make_image(3,3,1);
-//     memcpy(gx.data, gx_kernel, sizeof(gx_kernel));
-//     // for (int i=0;i<9;++i)printf("%f ",gx.data[i]);
-//     return gx;
-// }
-
-// image make_gy_filter()
-// {
-//     static const float gy_kernel[9] = {
-//         -1  ,2  ,-1 ,
-//         0   ,0  ,0  ,
-//         1   ,2  ,1  ,
-//     };
-//     image gy = make_image(3,3,1);
-//     memcpy(gy.data, gy_kernel, sizeof(gy_kernel));
-//     for (int i=0;i<9;++i)printf("%f ",gy.data[i]);
-//     return gy;
-// }
-
 image make_gx_filter()
 {
     image filter = make_image(3,3,1);
@@ -237,7 +211,6 @@ image make_gy_filter()
     set_pixel(filter, 2, 0, 0, -1);
     set_pixel(filter, 2, 1, 0, 0);
     set_pixel(filter, 2, 2, 0, 1);
-    // for (int i=0;i<9;++i)printf("%f ",filter.data[i]);
     return filter;
 }
 
