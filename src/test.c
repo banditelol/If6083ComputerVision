@@ -365,11 +365,14 @@ void test_hybrid_image(){
     image aria = load_image("data/aria.png");
     image f = make_gaussian_filter(2);
     image lfreq_m = convolve_image(melisa, f, 1);
+    save_image(lfreq_m, "lfreq_melisa");
     image lfreq_a = convolve_image(aria, f, 1);
     image hfreq_a = sub_image(aria , lfreq_a);
+    save_image(hfreq_a, "hfreq_aria");
     image reconstruct = add_image(lfreq_m , hfreq_a);
     image gt = load_image("figs/hybrid.png");
     clamp_image(reconstruct);
+    save_image(reconstruct, "reconstruction");
     TEST(same_image(reconstruct, gt, EPS));
     free_image(melisa);
     free_image(aria);
@@ -412,7 +415,8 @@ void test_sobel(){
     image theta = res[1];
     feature_normalize2(mag);
     feature_normalize2(theta);
-
+    save_image(mag, "dog-mag");
+    save_image(theta, "dog-theta");
     image gt_mag = load_image("figs/magnitude.png");
     image gt_theta = load_image("figs/theta.png");
     TEST(gt_mag.w == mag.w && gt_theta.w == theta.w);

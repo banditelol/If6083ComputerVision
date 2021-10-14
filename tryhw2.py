@@ -46,6 +46,13 @@ def test_gy():
     clamp_image(gy)
     save_image(gy, "dog-ggy")
     free_image(im)
+    
+def test_sobel():
+    im = load_image("data/dog.jpg")
+    mag, theta = sobel_image(im)
+    save_image(mag, "dog-mag")
+    save_image(theta, "dog-theta")
+    free_image(im)
 
 def test_thumb():
     im = load_image("data/dog.jpg")
@@ -65,15 +72,18 @@ def test_gauss():
     free_image(im)
 
 if __name__ == "__main__":
-    # print("Testing HPF")
-    # test_hpf()
-    # print("Testing Sharpen")
-    # test_sharpen()
-    # print("Testing Emboss")
-    # test_emboss()
-    # print("Testing Gauss")
-    # test_gauss()
+    print("Testing Thumb")
+    test_thumb()
+    print("Testing HPF")
+    test_hpf()
+    print("Testing Sharpen")
+    test_sharpen()
+    print("Testing Emboss")
+    test_emboss()
+    print("Testing Gauss")
+    test_gauss()
     print("Testing gx")
     test_gx()
     print("Testing gy")
     test_gy()
+    

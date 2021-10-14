@@ -122,7 +122,7 @@ image make_emboss_filter()
 // Answer: All, because HPF, Sharpen and Emboss can be used on each channel
 
 // Question 2.2.2: Do we have to do any post-processing for the above filters? Which ones and why?
-// Answer: On sharpen and emboss, because the kernel is not normalize and risk thee result being overflow.
+// Answer: On sharpen and emboss, because the kernel is not normalize and risk the result being overflow.
 
 int calc_gaussian_size(float sigma){
     int size = ceil(6 * sigma);
