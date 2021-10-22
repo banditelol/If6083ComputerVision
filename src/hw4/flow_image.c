@@ -137,8 +137,8 @@ image time_structure_matrix(image im, image prev, int s)
     if(converted){
         free_image(im); free_image(prev);
     }
-
-    return box_filter_image(S,s);
+    S = box_filter_image(S,s);
+    return S;
 }
 
 // Calculate the velocity given a structure image
@@ -166,7 +166,7 @@ image velocity_image(image S, int stride)
             matrix Minv = matrix_invert(M);
             float vx = 0;
             float vy = 0;
-            if(Minv.cols != 1){
+            if(Minv.cols != 0){
                 vx = Minv.data[0][0] * -Ixt + Minv.data[0][1] * -Iyt;
                 vy = Minv.data[1][0] * -Ixt + Minv.data[1][1] * -Iyt;
             } 

@@ -1,7 +1,7 @@
 OPENCV=0
 OPENMP=0
-DEBUG=0
-VERBOSE=0
+DEBUG=1
+VERBOSE=1
 
 OBJ=image_opencv.o load_image.o process_image.o args.o filter_image.o resize_image.o test.o harris_image.o matrix.o panorama_image.o flow_image.o list.o data.o classifier.o
 EXOBJ=main.o
