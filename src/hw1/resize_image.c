@@ -36,9 +36,14 @@ float bilinear_interpolate(image im, float x, float y, int c)
     float p2 = get_pixel(im, ceil(x), floor(y), c);
     float p3 = get_pixel(im, floor(x), ceil(y), c);
     float p4 = get_pixel(im, ceil(x), ceil(y), c);
-    float q1  = (y-floor(y))*p3 + (ceil(y)-y)*p1;
-    float q2  = (y-floor(y))*p4 + (ceil(y)-y)*p2;
-    float q = (x-floor(x))*q2 + (ceil(x)-x)*q1;
+    float d1 = ceil(y) - y;
+    float d2 = ceil(x) - x;
+    d1 = d1 == 0.0 ? 1.0:d1;
+    d2 = d2 == 0.0 ? 1.0:d2;
+
+    float q1  = (y-floor(y))*p3 + d1*p1;
+    float q2  = (y-floor(y))*p4 + d1*p2;
+    float q = (x-floor(x))*q2 + d2*q1;
     return q;
 }
 

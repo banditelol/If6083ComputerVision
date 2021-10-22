@@ -134,8 +134,7 @@ image structure_matrix(image im, float sigma)
 
     free_image(Ix);
     free_image(Iy);
-    S = convolve_image(S, gauss_filter, 1);
-    return S;
+    return convolve_image(S, gauss_filter, 1);
 }
 
 // Estimate the cornerness of each pixel given a structure matrix S.
@@ -233,10 +232,14 @@ descriptor *harris_corner_detector(image im, float sigma, float thresh, int nms,
     *n = count; // <- set *n equal to number of corners in image.
     descriptor *d = calloc(count, sizeof(descriptor));
     //TODO: fill in array *d with descriptors of corners, use describe_index.
-    int id = 0;
-    for (int i=0; i<Rnms.h*Rnms.w; ++i) {
-        if(Rnms.data[i] > thresh){
-            d[id++] = describe_index(Rnms, i);
+    count = 0;
+    for(int j = 0; j < Rnms.h; j++){
+        for(int i = 0; i < Rnms.w; i++){
+            float this_pixel = get_pixel(Rnms, i, j, 0);
+            if(this_pixel > thresh){
+                d[count] = describe_index(im, j * im.w + i);
+                count++;
+            }
         }
     }
 

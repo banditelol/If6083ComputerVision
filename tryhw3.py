@@ -35,6 +35,57 @@ def rainier_panorama():
     pan5 = panorama_image(pan4, im4, thresh=5)
     save_image(pan5, "rainier_panorama_5")
 
+def rainier_panorama_cyl():
+    im1 = load_image("data/Rainier1.png")
+    im2 = load_image("data/Rainier2.png")
+    im3 = load_image("data/Rainier3.png")
+    im4 = load_image("data/Rainier4.png")
+    im5 = load_image("data/Rainier5.png")
+    im6 = load_image("data/Rainier6.png")
+
+    im1 = cylindrical_project(im1, 500)
+    im2 = cylindrical_project(im2, 500)
+    im3 = cylindrical_project(im3, 500)
+    im4 = cylindrical_project(im4, 500)
+    im5 = cylindrical_project(im5, 500)
+    im6 = cylindrical_project(im6, 500)
+    save_image(im1, "cylindrical_projection")
+
+    pan = panorama_image(im1, im2, thresh=5)
+    save_image(pan, "rainier_panorama_1_cyl")
+    pan2 = panorama_image(pan, im5, thresh=5)
+    save_image(pan2, "rainier_panorama_2_cyl")
+    pan3 = panorama_image(pan2, im6, thresh=5)
+    save_image(pan3, "rainier_panorama_3_cyl")
+    pan4 = panorama_image(pan3, im3, thresh=5)
+    save_image(pan4, "rainier_panorama_4_cyl")
+    pan5 = panorama_image(pan4, im4, thresh=5)
+    save_image(pan5, "rainier_panorama_5_cyl")
+
+def test_cylindrical_projection():
+    im1 = load_image("data/field1.jpg")
+    im1 = cylindrical_project(im1, 1200)
+    save_image(im1, "cylindrical_projection")
+
+
+def field_panorama_rect():
+    im1 = load_image("data/field1.jpg")
+    im2 = load_image("data/field2.jpg")
+    im3 = load_image("data/field3.jpg")
+    im4 = load_image("data/field4.jpg")
+    im5 = load_image("data/field5.jpg")
+    im6 = load_image("data/field6.jpg")
+    im7 = load_image("data/field7.jpg")
+    im8 = load_image("data/field8.jpg")
+
+    pan = panorama_image(im5, im6, thresh=2, iters=50000, inlier_thresh=3)
+    save_image(pan, "field_panorama_1_rect")
+    pan2 = panorama_image(pan, im4, thresh=2, iters=50000, inlier_thresh=3)
+    save_image(pan2, "field_panorama_2_rect")
+    pan3 = panorama_image(pan2, im3, thresh=2, iters=50000, inlier_thresh=3)
+    save_image(pan3, "field_panorama_3_rect")
+    pan4 = panorama_image(pan3, im7, thresh=2, iters=50000, inlier_thresh=3)
+    save_image(pan4, "field_panorama_4_rect")
 
 def field_panorama():
     im1 = load_image("data/field1.jpg")
@@ -58,18 +109,21 @@ def field_panorama():
 
     pan = panorama_image(im5, im6, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan, "field_panorama_1")
-    pan2 = panorama_image(pan, im7, thresh=2, iters=50000, inlier_thresh=3)
+    pan2 = panorama_image(pan, im4, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan2, "field_panorama_2")
-    pan3 = panorama_image(pan2, im8, thresh=2, iters=50000, inlier_thresh=3)
+    pan3 = panorama_image(pan2, im3, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan3, "field_panorama_3")
-    pan4 = panorama_image(pan3, im4, thresh=2, iters=50000, inlier_thresh=3)
+    pan4 = panorama_image(pan3, im7, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan4, "field_panorama_4")
-    pan5 = panorama_image(pan4, im3, thresh=2, iters=50000, inlier_thresh=3)
+    pan5 = panorama_image(pan4, im8, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan5, "field_panorama_5")
 
-draw_corners()
-draw_matches()
-easy_panorama()
-#rainier_panorama()
-#field_panorama()
+# draw_corners()
+# draw_matches()
+# test_cylindrical_projection()
+# easy_panorama()
+# rainier_panorama()
+rainier_panorama_cyl()
+# field_panorama_rect()
+# field_panorama()
 
