@@ -40,15 +40,38 @@ void draw_line(image im, float x, float y, float dx, float dy)
         set_pixel(im, xi, yi, 2, b);
     }
 }
-
+// Get pixel which will return pad if out of bound
+// image im: image to get pixel from
+// float pad: the value of padding
+float get_pixel_pad(image im, int x, int y, int c, float pad){
+    if (x < 0 || x >= im.w) return pad;
+    if (y < 0 || y >= im.h) return pad;
+    return get_pixel(im, x, y, c);
+}
 // Make an integral image or summed area table from an image
 // image im: image to process
 // returns: image I such that I[x,y] = sum{i<=x, j<=y}(im[i,j])
 image make_integral_image(image im)
 {
     image integ = make_image(im.w, im.h, im.c);
-    // TODO: fill in the integral image
+    for(int i = 0; i < integ.w; ++i){
+        for(int j = 0; j < integ.h; ++j){
+            for (int k = 0; k < integ.c; ++k){
+                float p = get_pixel(im, i, j, k) \
+                        + get_pixel_pad(integ, i, j-1, k, 0) \
+                        + get_pixel_pad(integ, i-1, j, k, 0) \
+                        - get_pixel_pad(integ, i-1, j-1, k, 0);
+                set_pixel(integ, i, j, k, p);
+            }
+        }
+    }
     return integ;
+}
+
+float calculate_window_size(image im, int i, int j, int k, int s){
+    float width = MIN(i+s/2, im.w-1) - MAX(i-s/2-1,-1);
+    float height = MIN(j+s/2, im.h-1) - MAX(j-s/2-1,-1);
+    return width*height;
 }
 
 // Apply a box filter to an image using an integral image for speed
@@ -57,10 +80,21 @@ image make_integral_image(image im)
 // returns: smoothed image
 image box_filter_image(image im, int s)
 {
-    int i,j,k;
     image integ = make_integral_image(im);
     image S = make_image(im.w, im.h, im.c);
-    // TODO: fill in S using the integral image.
+    
+    for(int i = 0; i < integ.w; ++i){
+        for(int j = 0; j < integ.h; ++j){
+            for (int k = 0; k < integ.c; ++k){
+                float p_ul = get_pixel_pad(integ, i-s/2-1, j-s/2-1, k, 0.0);
+                float p_ur = get_pixel_pad(integ, MIN(i+s/2,integ.w-1), j-s/2-1, k, 0.0);
+                float p_dl = get_pixel_pad(integ, i-s/2-1, MIN(j+s/2,integ.h-1), k, 0.0);
+                float p_dr = get_pixel(integ, i+s/2, j+s/2, k);
+                float p = (p_dr + p_ul - p_dl - p_ur)/calculate_window_size(integ,i,j,k,s);
+                set_pixel(S,i,j,k,p);
+            }
+        }
+    }
     return S;
 }
 
@@ -72,7 +106,6 @@ image box_filter_image(image im, int s)
 //          3rd channel is IxIy, 4th channel is IxIt, 5th channel is IyIt.
 image time_structure_matrix(image im, image prev, int s)
 {
-    int i;
     int converted = 0;
     if(im.c == 3){
         converted = 1;
@@ -81,13 +114,31 @@ image time_structure_matrix(image im, image prev, int s)
     }
 
     // TODO: calculate gradients, structure components, and smooth them
+    // 5 channel for 3 spatial + 2 temporal
+    image S = make_image(im.w, im.h, 5);
+    image gx = convolve_image(im, make_gx_filter(), 0);
+    image gy = convolve_image(im, make_gy_filter(), 0);
+    image gt = sub_image(im, prev);
 
-    image S;
+    for(int i = 0; i < S.w; ++i){
+        for(int j = 0; j < S.h; ++j){
+            float Ix = get_pixel(gx, i,j,0);
+            float Iy = get_pixel(gy, i,j,0);
+            float It = get_pixel(gt, i,j,0);
+
+            set_pixel(S, i, j, 0, Ix*Ix);
+            set_pixel(S, i, j, 1, Iy*Iy);
+            set_pixel(S, i, j, 2, Ix*Iy);
+            set_pixel(S, i, j, 3, Ix*It);
+            set_pixel(S, i, j, 4, Iy*It);
+        }
+    }
 
     if(converted){
         free_image(im); free_image(prev);
     }
-    return S;
+
+    return box_filter_image(S,s);
 }
 
 // Calculate the velocity given a structure image
@@ -107,11 +158,22 @@ image velocity_image(image S, int stride)
             float Iyt = S.data[i + S.w*j + 4*S.w*S.h];
 
             // TODO: calculate vx and vy using the flow equation
+            M.data[0][0] = Ixx;
+            M.data[0][1] = Ixy;
+            M.data[1][0] = Ixy;
+            M.data[1][1] = Iyy;
+
+            matrix Minv = matrix_invert(M);
             float vx = 0;
             float vy = 0;
-
+            if(Minv.cols != 1){
+                vx = Minv.data[0][0] * -Ixt + Minv.data[0][1] * -Iyt;
+                vy = Minv.data[1][0] * -Ixt + Minv.data[1][1] * -Iyt;
+            } 
+            
             set_pixel(v, i/stride, j/stride, 0, vx);
             set_pixel(v, i/stride, j/stride, 1, vy);
+            free_matrix(Minv);
         }
     }
     free_matrix(M);
