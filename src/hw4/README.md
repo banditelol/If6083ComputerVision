@@ -46,7 +46,7 @@ Using OpenCV we can get images from the webcam and display the results in real-t
 
     optical_flow_webcam(15,4,8)
 
-
+in WSL to install it simply run `sudo apt install libopencv-dev`
 ## Turn it in ##
 
 Besides submitting your program, you need to make video-demo which shows how you run your program, and how the result appears.

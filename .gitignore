@@ -14,3 +14,11 @@ Icon?
 Thumbs.db
 *.swp
 *.jpg
+*.log
+*.tar.gz
+*.tgz
+*.train
+*.test
+train/
+test/
+cifar/

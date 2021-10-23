@@ -118,12 +118,12 @@ def field_panorama():
     pan5 = panorama_image(pan4, im8, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan5, "field_panorama_5")
 
-# draw_corners()
-# draw_matches()
-# test_cylindrical_projection()
-# easy_panorama()
+draw_corners()
+draw_matches()
+test_cylindrical_projection()
+easy_panorama()
 # rainier_panorama()
-rainier_panorama_cyl()
+# rainier_panorama_cyl()
 # field_panorama_rect()
 # field_panorama()
 

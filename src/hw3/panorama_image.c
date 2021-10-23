@@ -445,7 +445,7 @@ image panorama_image(image a, image b, float sigma, float thresh, int nms, float
     // Run RANSAC to find the homography
     matrix H = RANSAC(m, mn, inlier_thresh, iters, cutoff);
 
-    if(0){
+    if(1){
         // Mark corners and matches between images
         mark_corners(a, ad, an);
         mark_corners(b, bd, bn);

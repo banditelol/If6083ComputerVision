@@ -157,13 +157,38 @@ After training our python script will calculate the accuracy the model gets on b
 
 Why might we be interested in both training accuracy and testing accuracy? What do these two numbers tell us about our current model?
 
+> while training accuracy tells us about the performance of the model regarding the training data, testing accuracy tells us how the model might perform on unseen data that's supposed to be taken from the same population as our training set. 
+> Or with the vocab gained from the slide, the gap in performance (train to human, and test to train) can help in identifying the bias and variance of our model. if the data too sensitive to the noise of our training set, we could add regularization to our model, and if the bias is too high we could improve our model by adding complexities.
+
 #### 5.2.2.2 Question ####
 
 Try varying the model parameter for learning rate to different powers of 10 (i.e. 10^1, 10^0, 10^-1, 10^-2, 10^-3) and training the model. What patterns do you see and how does the choice of learning rate affect both the loss during training and the final model accuracy?
 
+The data can be seen in my [experiment sheet](https://docs.google.com/spreadsheets/d/1pN-tT1c1fVTUev9fyhcgRmiIkFdkEh-XP6NeSxpP9IU/edit?usp=sharing)
+
+There are several patterns to be seen here.
+
+![](https://i.imgur.com/vJ8q3Qr.png)
+
+- when the rate is too high (10), the loss can be seen to be exploding (that's why it outputs `-nan`), and it basically stopped on the 11th iteration
+
+![](https://i.imgur.com/ytR7tUm.png)
+
+- When the rate is quite high (1), the loss can still be seen, but it doesn't converge and keep on oscilating
+- When the rate is sufficiently small (0.1 and 0.01), we can see it converge overtime to be close to 0
+- but it its too small (0.001) it took too long to converge and by the end of iteration its loss is still relatively high.
+
+![](https://i.imgur.com/SysAvKv.png)
+
+As for the accuracy on the data, we could see that when the learning rate is too high, it almost learn nothing at all (0.1 is the accuracy if you guess the same number all the time). rate of 1 gave better accuracy, but still can be improved by lowering the learning rate.
+When the learning rate is too small we see the trend to be decreasing again.
 #### 5.2.2.3 Question ####
 
 Try varying the parameter for weight decay to different powers of 10: (10^0, 10^-1, 10^-2, 10^-3, 10^-4, 10^-5). How does weight decay affect the final model training and test accuracy?
+
+![](https://i.imgur.com/hUyWq39.png)
+
+It barely affect the accuracies. the effect can be seen on the decay of 1e0 and 1e-1, which shows lower accuracy compared to lower decay rate.
 
 ### 5.2.3 Train a neural network ###
 
@@ -173,14 +198,33 @@ Now change the training code to use the neural network model instead of the soft
 
 Currently the model uses a logistic activation for the first layer. Try using a the different activation functions we programmed. How well do they perform? What's best?
 
+![](https://i.imgur.com/CVyy8Xg.png)
+
+Looking above chart, it can be seen that **Relu gave the best performance** out of the three.
+
 #### 5.2.3.2 Question ####
 
 Using the same activation, find the best (power of 10) learning rate for your model. What is the training accuracy and testing accuracy?
+
+![](https://i.imgur.com/MppSBBp.png)
+
+Using Relu, we could get the above result, **the best result can be achieved by learning rate of 0.1** with testing accuracies slightly lower than the training. As seen in the following table:
+
+| Train  | Test   |
+|--------|--------|
+| 0.9592 | 0.9540 |
 
 #### 5.2.3.3 Question ####
 
 Right now the regularization parameter `decay` is set to 0. Try adding some decay to your model. What happens, does it help? Why or why not may this be?
 
+![](https://i.imgur.com/r8kNYEQ.png)
+
+Above chart shows that weight decay does affect the performance, while weight decay of 1 yield in lower accuract than without decay, yet **weight decay of 1e-4 gave the best result** even though it still has lower test accuracy. It is possible because weight decay is one of regularization parameter that can be used to help the model to generalize better. Thus resulting in the following measures:
+
+| Train  | Test   |
+|--------|--------|
+| 0.9637 | 0.9601 |
 
 #### 5.2.3.4 Question ####
 
